@@ -12,3 +12,10 @@ stopBtn.addEventListener('click', () => {
   startBtn.innerText = 'Start';
   startBtn.classList.remove('is-danger');
 });
+
+chooseBtn.addEventListener('click', getVideoSources);
+
+//getting video sources with ipc
+async function getVideoSources() {
+  const sources = await window.api.getSources({ types: ['window', 'screen'] });
+}

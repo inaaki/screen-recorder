@@ -7,9 +7,10 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+let mainWindow;
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -51,8 +52,20 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-const { ipcMain, desktopCapturer } = require('electron');
+const { ipcMain, desktopCapturer, Menu } = require('electron');
 
-ipcMain.handle('get_sources', (event, opts) =>
-  desktopCapturer.getSources(opts),
-);
+ipcMain.on('set_media_stream', async (event, types) => {
+  const sources = await desktopCapturer.getSources({ types });
+
+  const menuTemplate = sources.map((source) => {
+    return {
+      label: source.name,
+      click: () => {
+        mainWindow.webContents.send('send_device_id', source);
+      },
+    };
+  });
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  menu.popup();
+});

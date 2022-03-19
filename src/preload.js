@@ -1,8 +1,12 @@
 const { ipcRenderer, contextBridge } = require('electron');
 
 const API = {
-  getSources: (types) =>
-    ipcRenderer.invoke('get_sources', types),
+  setMediaStream: (types) => {
+    ipcRenderer.send('set_media_stream', types);
+  },
+  onReceiveId: (callback) => {
+    ipcRenderer.on('send_device_id', (event, id) => callback(id));
+  },
 };
 
 contextBridge.exposeInMainWorld('api', API);

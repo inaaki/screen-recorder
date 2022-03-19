@@ -27,3 +27,10 @@ video {
   overflow: hidden;
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
 }
+
+#choose_btn {
+  max-width: 80%;
+  text-align: center;
+  white-space: normal;
+  height: auto;
+}

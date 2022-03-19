@@ -54,14 +54,19 @@ const { ipcMain, desktopCapturer, Menu, dialog } = require('electron');
 ipcMain.on('set_media_stream', async (event, types) => {
   const sources = await desktopCapturer.getSources({ types });
 
-  const menuTemplate = sources.map((source) => {
-    return {
-      label: source.name,
-      click: () => {
-        mainWindow.webContents.send('send_device_id', source);
-      },
-    };
-  });
+  const menuTemplate = sources
+    .filter((source) => {
+      if (source.name === 'Screen Recorder') return false;
+      return true;
+    })
+    .map((source) => {
+      return {
+        label: source.name,
+        click: () => {
+          mainWindow.webContents.send('send_device_id', source);
+        },
+      };
+    });
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   menu.popup();

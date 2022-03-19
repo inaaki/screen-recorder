@@ -61,6 +61,7 @@ async function handleMedia(source) {
   };
   mediaRecorder = new MediaRecorder(stream, recordingOptions);
   mediaRecorder.ondataavailable = handleRecordData;
+  mediaRecorder.onstart = () => (chooseBtn.style.pointerEvents = 'none');
   mediaRecorder.onstop = handleRecordStop;
 }
 
@@ -73,6 +74,7 @@ function handleRecordData(e) {
 //handling recording data on stop recording
 // const {Buffer} = require('buffer')
 async function handleRecordStop() {
+  chooseBtn.style.pointerEvents = 'auto';
   const blob = new Blob(recordedChunks, {
     type: 'video/webm; codecs=vp9',
   });
@@ -80,6 +82,6 @@ async function handleRecordStop() {
     defaultPath: `vid-${Date.now()}.webm`,
   });
   window.api.saveFile(filePath, blob);
-  
+
   recordedChunks = [];
 }

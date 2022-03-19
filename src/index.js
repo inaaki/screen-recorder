@@ -52,7 +52,7 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-const { ipcMain, desktopCapturer, Menu } = require('electron');
+const { ipcMain, desktopCapturer, Menu, dialog } = require('electron');
 
 ipcMain.on('set_media_stream', async (event, types) => {
   const sources = await desktopCapturer.getSources({ types });
@@ -68,4 +68,9 @@ ipcMain.on('set_media_stream', async (event, types) => {
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   menu.popup();
+});
+
+ipcMain.handle('get_saving_path', async (event, options) => {
+  const { filePath } = await dialog.showSaveDialog(options);
+  return filePath;
 });

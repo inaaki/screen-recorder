@@ -18,7 +18,6 @@ startBtn.addEventListener('click', () => {
 });
 stopBtn.addEventListener('click', () => {
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    console.log(mediaRecorder);
     startBtn.innerText = 'Start';
     startBtn.classList.remove('is-danger');
     //
@@ -72,18 +71,15 @@ function handleRecordData(e) {
   }
 }
 //handling recording data on stop recording
-function handleRecordStop() {
+// const {Buffer} = require('buffer')
+async function handleRecordStop() {
   const blob = new Blob(recordedChunks, {
-    type: 'video/webm',
+    type: 'video/webm; codecs=vp9',
   });
-  const downloadElm = document.createElement('a');
-  downloadElm.href = URL.createObjectURL(blob);
-  downloadElm.download = `vid-${Date.now()}.webm`;
-  downloadElm.style.display = 'none';
-  document.body.appendChild(downloadElm);
-  downloadElm.click();
-  URL.revokeObjectURL(blob);
-  document.body.removeChild(downloadElm);
-
+  const filePath = await window.api.getSavePath({
+    defaultPath: `vid-${Date.now()}.webm`,
+  });
+  window.api.saveFile(filePath, blob);
+  
   recordedChunks = [];
 }

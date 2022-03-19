@@ -11,7 +11,7 @@ const API = {
   getSavePath: (options) => ipcRenderer.invoke('get_saving_path', options),
   saveFile: async (path, blob) => {
     const buffer = Buffer.from(await blob.arrayBuffer());
-    writeFile(path, buffer);
+    writeFile(path, buffer, () => {});
   },
 };
 
